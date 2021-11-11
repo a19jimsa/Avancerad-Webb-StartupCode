@@ -152,3 +152,12 @@ button:hover{
 .forecast{
   width: 75%;
 }
+
+#welcomeDialog{
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  background-color: white;
+}

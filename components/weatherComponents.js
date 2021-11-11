@@ -83,15 +83,37 @@ class ClimateCode extends React.Component {
     }
 }
 
-class Dialog extends React.Component {
+class WelcomeDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.handleClick = this.handleClick.bind(this);
+        this.state = {class: "show"};
+    }
+
+    handleClick(){
+        this.setState({class: "none"});
+        
     }
 
     render() { 
-        return <div>{this.props.children}</div>;
+        return (<Dialog class={this.state.class}><h1>Välkommen till vä'rt!</h1>
+        <p>Här kan du följa prognosen för vär't i 1 till 10 dagarsprognos.</p>
+        <p>Skriv in vilken ord du vill veta vä'rt!</p>
+        <button onClick={this.handleClick}>Tackar!</button>
+        </Dialog>)
+    }
+}
+
+class Dialog extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {};
+    }
+    render() { 
+        return <div className={this.props.class}>{this.props.children}</div>;
     }
 }
 
 
 ReactDOM.render(<City />, document.getElementById("content"));
+ReactDOM.render(<WelcomeDialog />, document.getElementById("welcomeDialog"));
