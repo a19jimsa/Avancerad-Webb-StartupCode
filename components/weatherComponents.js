@@ -12,14 +12,14 @@ class City extends React.Component {
         super(props);
         this.handleClick = this.handleClick.bind(this);
     }
-    state = {name: "Arjeplog", class: "none", show: true};
+    state = {name: "Arjeplog", class: "none", show: true, button: "Fråga oss"};
 
     handleClick(){
         this.state.show = !this.state.show;
         if(this.state.show){
-            this.setState({class: "none"});
+            this.setState({class: "none", button: "Fråga oss"});
         }else{
-            this.setState({class: "welcomeDialog"});
+            this.setState({class: "welcomeDialog", button: "Stäng"});
         }
     }
 
@@ -28,7 +28,7 @@ class City extends React.Component {
             <h1>{this.state.name}</h1>
             <Forecast />
             <ChatDialog class={this.state.class} name={this.state.name}><h1>Väderchatt - {this.state.name}</h1></ChatDialog>
-            <button onClick={this.handleClick} className="chatButton">Fråga oss</button>
+            <button onClick={this.handleClick} className="chatButton">{this.state.button}</button>
             <WelcomeDialog />
         </div>;
     }
