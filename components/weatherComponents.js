@@ -10,12 +10,12 @@ class Button extends React.Component{
 class City extends React.Component {
     state = {name: "Arjeplog"};
 
-
     render() { 
         return <div>
             <h1>{this.state.name}</h1>
             <Forecast />
             <button className="chatButton">Fråga oss</button>
+            <WelcomeDialog />
         </div>;
     }
 }
@@ -87,7 +87,7 @@ class WelcomeDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.state = {class: "show"};
+        this.state = {class: "welcomeDialog"};
     }
 
     handleClick(){
@@ -116,4 +116,3 @@ class Dialog extends React.Component {
 
 
 ReactDOM.render(<City />, document.getElementById("content"));
-ReactDOM.render(<WelcomeDialog />, document.getElementById("welcomeDialog"));
