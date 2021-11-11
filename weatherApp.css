@@ -66,8 +66,6 @@ aside button{
   display: flex;
   width: 100%;
   height: 50px;
-  background-color: white;
-  border-radius: 5px;
   align-items: center;
   justify-content: center;
   margin-bottom: 5px;
@@ -108,16 +106,25 @@ h1{
 
 button{
   padding: 10px;
-  background-color: white;
-  border: 1px solid blue;
+  background-color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  color: white;
 }
 
 button:hover{
   background-color: lightblue;
 }
 
+.infoBox{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
 .infoBox:hover{
-  border: 1px solid blue;
   background-color: lightblue;
 }
 
@@ -160,7 +167,8 @@ button:hover{
   transform: translate(-50%, -50%);
   width: 500px;
   height: 500px;
-  background-color: white;
+  background-color: #cce5ff;
+  border-color: 1px solid #b8daff;
   border-radius: 10px;
   box-shadow: 0px 1px 3px 0px grey;
   text-align: center;
@@ -173,4 +181,7 @@ button:hover{
 
 .none{
   display: none;
+}
+.toggle{
+  display: flex;
 }

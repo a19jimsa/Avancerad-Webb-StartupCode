@@ -51,13 +51,34 @@ class Forecast extends React.Component{
                     <button onClick={this.handleClick.bind(this, 7)}>4 dagarsprognos</button>
                 </aside>
                 <div className="forecast">
+                    
                     <div><Button value="collapse">Öppna alla</Button><p>Temperatur max/min</p><p>Nederbörd per dygn</p><p>Vind/byvind</p></div>
+                    
                     {this.state.forecasts.slice(0, this.state.count).map(tag =>
+                    <Accordion>
                     <div key={tag.name+tag.fromtime+tag.totime} className="infoBox"><h2>{tag.fromtime.substring(0,10)}</h2><h2>{tag.auxdata.TVALUE}&#176;C</h2><h2>{tag.auxdata.RVALUE}{tag.auxdata.RUNIT}</h2><h2>{tag.auxdata.MPS}m/s</h2>
-                    </div>)}
+                    </div>
+                    </Accordion>
+                    )}
                 </div>
             </div>
         );
+    }
+}
+
+class Accordion extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(){
+        this.setState();
+
+    }
+
+    render() { 
+        return <div onClick={this.handleClick} className="toggle">{this.props.children}</div>;
     }
 }
 
@@ -98,7 +119,7 @@ class WelcomeDialog extends React.Component {
     render() { 
         return (<Dialog class={this.state.class}><h1>Välkommen till vä'rt!</h1>
         <p>Här kan du följa prognosen för vär't i 1 till 10 dagarsprognos.</p>
-        <p>Skriv in vilken ord du vill veta vä'rt!</p>
+        <p>Skriv in vilken ort du vill veta vä'rt!</p>
         <button onClick={this.handleClick}>Tackar!</button>
         </Dialog>)
     }
