@@ -179,6 +179,24 @@ button:hover{
   padding: 10px;
 }
 
+.welcomeDialog input[type=text]{
+  position: absolute;
+  right: 50%;
+  bottom: 20px;
+  margin-right: -100px;
+  border: none;
+  text-decoration: none;
+  outline: none;
+  height: 40px;
+  border-radius: 5px;
+}
+
+.welcomeDialog button{
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
 .none{
   display: none;
 }

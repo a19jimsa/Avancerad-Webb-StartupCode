@@ -8,13 +8,27 @@ class Button extends React.Component{
 }
 
 class City extends React.Component {
-    state = {name: "Arjeplog"};
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+    state = {name: "Arjeplog", class: "none", show: true};
+
+    handleClick(){
+        this.state.show = !this.state.show;
+        if(this.state.show){
+            this.setState({class: "none"});
+        }else{
+            this.setState({class: "welcomeDialog"});
+        }
+    }
 
     render() { 
         return <div>
             <h1>{this.state.name}</h1>
             <Forecast />
-            <button className="chatButton">Fråga oss</button>
+            <ChatDialog class={this.state.class} name={this.state.name}><h1>Väderchatt - {this.state.name}</h1></ChatDialog>
+            <button onClick={this.handleClick} className="chatButton">Fråga oss</button>
             <WelcomeDialog />
         </div>;
     }
@@ -101,6 +115,24 @@ class ClimateCode extends React.Component {
                 </tbody>
             </table>
         )
+    }
+}
+
+class ChatDialog extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+        this.state = {};
+    }
+
+    handleClick(){
+
+    }
+
+    render() { 
+        return (<div className={this.props.class}>
+            <Dialog><h1>Väderchatt - {this.props.name}</h1><input type="text"></input><button onClick={this.handleClick}>Skicka</button></Dialog>
+            </div>)
     }
 }
 
