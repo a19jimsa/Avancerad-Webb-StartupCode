@@ -122,7 +122,7 @@ class ChatDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.state = {};
+        this.state = {chatdialog: [{id: 1, user: "Jimmy", message: "Hejsan!"}, {id: 2, user: "Admin", message: "Hej"}]};
     }
 
     handleClick(){
@@ -131,7 +131,9 @@ class ChatDialog extends React.Component {
 
     render() { 
         return (<div className={this.props.class}>
-            <Dialog><h1>Väderchatt - {this.props.name}</h1><input type="text"></input><button onClick={this.handleClick}>Skicka</button></Dialog>
+            <Dialog><h1>Väderchatt - {this.props.name}</h1><input type="text"></input>
+            {this.state.chatdialog.map(tag => <div className="messageBox" key={tag.id}>{tag.user} {tag.message}</div>)}
+            <button onClick={this.handleClick}>Skicka</button></Dialog>
             </div>)
     }
 }
