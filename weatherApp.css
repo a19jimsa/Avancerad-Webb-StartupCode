@@ -160,7 +160,7 @@ button:hover{
   width: 75%;
 }
 
-.welcomeDialog{
+.dialog{
   position: absolute;
   left: 50%;
   top: 50%;
@@ -175,14 +175,11 @@ button:hover{
   padding: 20px;
 }
 
-.welcomeDialog > *{
+.dialog > *{
   padding: 10px;
 }
 
-.welcomeDialog input[type=text]{
-  position: absolute;
-  right: 50%;
-  bottom: 20px;
+.dialog input[type=text]{
   margin-right: -100px;
   border: none;
   text-decoration: none;
@@ -190,12 +187,6 @@ button:hover{
   height: 40px;
   border-radius: 5px;
   font-size: 20px;
-}
-
-.welcomeDialog button{
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
 }
 
 .none{
@@ -206,13 +197,27 @@ button:hover{
 }
 
 .messageBox{
-  position: absolute;
-  bottom: 100px;
-  left: 10px;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.message{
   background-color: #007bff;
   color: white;
-  width: 50%;
   border-radius: 5px;
   padding: 10px;
-  text-align: left;
+  width: 100%;
+  display: flex;
+  justify-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 10px;
+}
+
+.inputBox{
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  justify-content: space-around;
+  justify-items: center;
 }

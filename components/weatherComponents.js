@@ -19,7 +19,7 @@ class City extends React.Component {
         if(this.state.show){
             this.setState({class: "none", button: "Fråga oss"});
         }else{
-            this.setState({class: "welcomeDialog", button: "Stäng"});
+            this.setState({class: "dialog", button: "Stäng"});
         }
     }
 
@@ -63,6 +63,7 @@ class Forecast extends React.Component{
                     <button onClick={this.handleClick.bind(this, 2)}>2 dagarsprognos</button>
                     <button onClick={this.handleClick.bind(this, 3)}>3 dagarsprognos</button>
                     <button onClick={this.handleClick.bind(this, 7)}>4 dagarsprognos</button>
+                    <button onClick={this.handleClick.bind(this, 10)}>10 dagarsprognos</button>
                 </aside>
                 <div className="forecast">
                     
@@ -122,7 +123,7 @@ class ChatDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.state = {chatdialog: [{id: 1, user: "Jimmy", message: "Hejsan!"}, {id: 2, user: "Admin", message: "Hej"}]};
+        this.state = {chatdialog: [{id: 1, user: "Jimmy", message: "Hejsan!"}, {id: 2, user: "Admin", message: "Hej"},{id: 3, user: "Admin", message: "Hej"}]};
     }
 
     handleClick(){
@@ -131,9 +132,15 @@ class ChatDialog extends React.Component {
 
     render() { 
         return (<div className={this.props.class}>
-            <Dialog><h1>Väderchatt - {this.props.name}</h1><input type="text"></input>
-            {this.state.chatdialog.map(tag => <div className="messageBox" key={tag.id}>{tag.user} {tag.message}</div>)}
-            <button onClick={this.handleClick}>Skicka</button></Dialog>
+            <Dialog><h1>Väderchatt - {this.props.name}</h1>
+            <div className="messageBox">
+                {this.state.chatdialog.map(tag => <div className="message" key={tag.id}><div>{tag.user}</div><div>{tag.message}</div><Like/></div>)}
+            </div>
+            <div className="inputBox">
+                <input type="text"></input><button onClick={this.handleClick}>Skicka</button>
+            </div>
+            </Dialog>
+            
             </div>)
     }
 }
@@ -142,7 +149,7 @@ class WelcomeDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.state = {class: "welcomeDialog"};
+        this.state = {class: "dialog"};
     }
 
     handleClick(){
@@ -169,5 +176,21 @@ class Dialog extends React.Component {
     }
 }
 
+class Like extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+        
+    }
+
+    handleClick(){
+        //Do something when clicked on button
+    }
+
+    render() { 
+        return <button onClick={this.handleClick}>Like</button>;
+    }
+}
 
 ReactDOM.render(<City />, document.getElementById("content"));
