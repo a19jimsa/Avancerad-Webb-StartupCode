@@ -7,7 +7,7 @@ class Button extends React.Component{
     }
 }
 
-class City extends React.Component {
+class Info extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
@@ -66,13 +66,11 @@ class Forecast extends React.Component{
                     <button onClick={this.handleClick.bind(this, 10)}>10 dagarsprognos</button>
                 </aside>
                 <div className="forecast">
-                    
                     <div><Button value="collapse">Öppna alla</Button><p>Temperatur max/min</p><p>Nederbörd per dygn</p><p>Vind/byvind</p></div>
-                    
                     {this.state.forecasts.slice(0, this.state.count).map(tag =>
                     <Accordion>
-                    <div key={tag.name+tag.fromtime+tag.totime} className="infoBox"><h2>{tag.fromtime.substring(0,10)}</h2><h2>{tag.auxdata.TVALUE}&#176;C</h2><h2>{tag.auxdata.RVALUE}{tag.auxdata.RUNIT}</h2><h2>{tag.auxdata.MPS}m/s</h2>
-                    </div>
+                        <div key={tag.name+tag.fromtime+tag.totime} className="infoBox"><h2>{tag.fromtime.substring(0,10)}</h2><h2>{tag.auxdata.TVALUE}&#176;C</h2><h2>{tag.auxdata.RVALUE}{tag.auxdata.RUNIT}</h2><h2>{tag.auxdata.MPS}m/s</h2>
+                        </div>
                     </Accordion>
                     )}
                 </div>
@@ -125,11 +123,9 @@ class ChatDialog extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.state = {chatdialog: [{id: 1, user: "Jimmy", message: "Hejsan!"}, {id: 2, user: "Admin", message: "Hej"},{id: 3, user: "Admin", message: "Hej"}]};
     }
-
     handleClick(){
 
     }
-
     render() { 
         return (<div className={this.props.class}>
             <Dialog><h1>Väderchatt - {this.props.name}</h1>
@@ -179,9 +175,7 @@ class Dialog extends React.Component {
 class Like extends React.Component {
     constructor(props) {
         super(props);
-
         this.handleClick = this.handleClick.bind(this);
-        
     }
 
     handleClick(){
@@ -193,4 +187,4 @@ class Like extends React.Component {
     }
 }
 
-ReactDOM.render(<City />, document.getElementById("content"));
+ReactDOM.render(<Info />, document.getElementById("content"));
