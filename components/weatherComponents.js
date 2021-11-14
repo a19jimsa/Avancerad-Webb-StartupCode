@@ -187,7 +187,6 @@ class Like extends React.Component {
     }
 }
 
-<<<<<<< HEAD
 async function getData() {
     const response = await fetch("API/Forecast.php", {
         method: 'POST',
@@ -199,18 +198,5 @@ async function getData() {
     }
 
     getData();
-=======
-        async function getData() {
-            const response = await fetch("API/Hello.php", {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' }
-            })
-              .then((response) => response.json()).then(data => {
-                console.log(data);
-              });
-          }
-
-          getData();
->>>>>>> 0d724f9d0e67527668a6f885f27e62d88aeabd05
 
 ReactDOM.render(<Info />, document.getElementById("content"));
