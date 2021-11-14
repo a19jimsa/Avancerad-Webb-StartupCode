@@ -187,4 +187,16 @@ class Like extends React.Component {
     }
 }
 
+async function getData(){
+      const response = await fetch("../Avancerad-Webb-API-main/Hello.php", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'}
+      })
+      .then((response) => response.json()).then(data => {
+        console.log(data);
+      });
+  }
+
+  getData();
+
 ReactDOM.render(<Info />, document.getElementById("content"));
