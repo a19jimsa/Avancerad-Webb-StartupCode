@@ -10,15 +10,15 @@ class Button extends React.Component{
 class Info extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.data);
         this.handleClick = this.handleClick.bind(this);
-        this.state = {data: this.props.data, class: "none", show: true, button: "Fråga oss"};
+        console.log(this.props.date);
+        this.state = {data: this.props.data, class: "none", show: true, button: "Chatta"};
     }
 
     handleClick(){
         this.state.show = !this.state.show;
         if(this.state.show){
-            this.setState({class: "none", button: "Fråga oss"});
+            this.setState({class: "none", button: "Chatta"});
         }else{
             this.setState({class: "dialog", button: "Stäng"});
         }
@@ -29,10 +29,11 @@ class Info extends React.Component {
             <h1>{this.state.data.name}</h1>
             <div>{this.state.data.about}</div>
             <div>{this.state.data.climate}</div>
-            <Forecast name={this.state.data.name}/>
+            <Forecast name={this.state.data.name} days={this.props.date}/>
             <ChatDialog class={this.state.class} name={this.state.data.name}><h1>Väderchatt - {this.state.data.name}</h1></ChatDialog>
             <button onClick={this.handleClick} className="chatButton">{this.state.button}</button>
             <WelcomeDialog />
+            <ClimateCode />
         </div>;
     }
 }
@@ -42,6 +43,8 @@ class Forecast extends React.Component{
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.updateForecast();
+        console.log(this.props.days);
     }
 
     state = {
@@ -50,13 +53,13 @@ class Forecast extends React.Component{
             {name: "Arjeplog",fromtime:"2020-01-02 00:00:00",totime:"2020-01-02 06:00:00",periodno:"0",periodname:"Night",auxdata:{"TUNIT":"celsius","TVALUE":"-8.2","ALTUNIT":"fahrenheit","ALTVALUE":"17.24","NUMBER":"10","WSYMB3NUMBER":"23","FNAME":"Sleet","RUNIT":"mm","RVALUE":"1.2","DEG":"257","CODE":"SW","NAME":"Southwest","MPS":"14.4","NAME":"Near Gale","UNIT":"hPa","VALUE":"1276"}},
             {name:"Arjeplog",fromtime:"2020-01-03 00:00:00",totime:"2020-01-03 06:00:00",periodno:"0",periodname:"Night",auxdata:{"TUNIT":"celsius","TVALUE":"-8.7","ALTUNIT":"fahrenheit","ALTVALUE":"16.34","NUMBER":"11","WSYMB3NUMBER":"25","FNAME":"Light snow","RUNIT":"mm","RVALUE":"1.7","DEG":"257","CODE":"W","NAME":"West","MPS":"15.3","NAME":"Near Gale","UNIT":"hPa","VALUE":"1267"}}
         ],
-        count: 1,
         draw: false
     };
 
-    async updateForecast(){
+    async updateForecast(number){
         const params = {
-            ort: this.props.name
+            ort: this.props.name,
+            days: number
         }
         const response = await fetch("API/Forecast.php", {
             method: 'POST',
@@ -70,18 +73,15 @@ class Forecast extends React.Component{
     }
 
     async handleClick(number){
-        this.updateForecast();
-        this.setState({count: number});
+        this.updateForecast(number);
     }
 
     aside(){
         return(
         <aside>
             <button onClick={this.handleClick.bind(this, 1)}>1 dagsprognos</button>
-            <button onClick={this.handleClick.bind(this, 2)}>2 dagarsprognos</button>
             <button onClick={this.handleClick.bind(this, 3)}>3 dagarsprognos</button>
-            <button onClick={this.handleClick.bind(this, 7)}>4 dagarsprognos</button>
-            <button onClick={this.handleClick.bind(this, 10)}>10 dagarsprognos</button>
+            <button onClick={this.handleClick.bind(this, 7)}>7 dagarsprognos</button>
         </aside>)
     }
 
@@ -91,10 +91,10 @@ class Forecast extends React.Component{
             <div className="flex">
                 {this.aside()}
                 <div className="forecast">
-                    <div><Button value="collapse">Öppna alla</Button><p>Temperatur max/min</p><p>Nederbörd per dygn</p><p>Vind/byvind</p></div>
-                    {this.state.forecast.slice(0, this.state.count).map(tag =>
+                    <div><Button value="collapse">Öppna alla</Button><p>Från</p><p>Till</p><p>Temperatur max/min</p><p>Nederbörd per dygn</p><p>Vind/byvind</p></div>
+                    {this.state.forecast.map(tag =>
                     <Accordion>
-                        <div key={tag.name+tag.fromtime+tag.totime} className="infoBox"><h2>{tag.name}</h2><h2>{tag.fromtime.substring(0,10)}</h2><h2>{tag.forecast.TVALUE}&#176;C</h2><h2>{tag.forecast.RVALUE}{tag.forecast.RUNIT}</h2><h2>{tag.forecast.MPS}m/s</h2>
+                        <div key={tag.name+tag.fromtime+tag.totime} className="infoBox"><h2>{tag.name}</h2><h2>{tag.fromtime}</h2><h2>{tag.totime}</h2><h2>{tag.forecast.TVALUE}&#176;C</h2><h2>{tag.forecast.RVALUE}{tag.forecast.RUNIT}</h2><h2>{tag.forecast.MPS}m/s</h2>
                         </div>
                     </Accordion>
                     )}
@@ -133,6 +133,10 @@ class Accordion extends React.Component {
 
 
 class ClimateCode extends React.Component {
+    constructor(props) {
+        super(props);
+        this.getData();
+    }
     //Properties specifies here
     //State is an object the component need
     state = {
@@ -140,6 +144,20 @@ class ClimateCode extends React.Component {
             {code: "Af", name: "Tropical rainforest climate Tropical Rainforest", color: "#960000"},
             {code: "Am", name: "Tropical monsoon climate Tropical Monsoon", color: "#FF0000"}]
     };
+
+    async getData(){
+    const params = {
+        ort: this.props.name
+    }
+    const response = await fetch("API/Climatecodes.php", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params)
+    })
+    .then((response) => response.json()).then(data => {
+        this.setState({climatecodes:data})
+    });
+    }
 
     render() {
         
@@ -157,8 +175,24 @@ class ChatDialog extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.getData();
         this.state = {chatdialog: [{id: 1, user: "Jimmy", message: "Hejsan!"}, {id: 2, user: "Admin", message: "Hej"},{id: 3, user: "Admin", message: "Hej"}]};
     }
+
+    async getData(){
+        const params = {
+            ort: this.props.name
+        }
+        const response = await fetch("API/Comments.php", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
+        })
+        .then((response) => response.json()).then(data => {
+        this.setState({chatdialog:data})
+        });
+    }
+
     handleClick(){
 
     }
@@ -166,7 +200,7 @@ class ChatDialog extends React.Component {
         return (<div className={this.props.class}>
             <Dialog><h1>Väderchatt - {this.props.name}</h1>
             <div className="messageBox">
-                {this.state.chatdialog.map(tag => <div className="message" key={tag.id}><div>{tag.user}</div><div>{tag.message}</div><Like/></div>)}
+                {this.state.chatdialog.map(tag => <div className="message" key={tag.id+tag.username+tag.content}><p>{tag.username}</p><p>{tag.content}</p><Like/></div>)}
             </div>
             <div className="inputBox">
                 <input type="text"></input><button onClick={this.handleClick}>Skicka</button>
@@ -222,20 +256,3 @@ class Like extends React.Component {
         return <button onClick={this.handleClick}>Like</button>;
     }
 }
-
-const params = {
-    ort: "Arjeplog"
-}
-
-async function getData(){
-    const response = await fetch("API/Ort.php", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params)
-    })
-    .then((response) => response.json()).then(data => {
-    ReactDOM.render(<Info data={data}/>, document.getElementById("content"));
-    });
-}
-
-getData();

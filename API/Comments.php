@@ -3,7 +3,11 @@ header('Content-Type: application/json; charset=utf-8');
 
 // Takes raw data from the request and make php object
 $data = json_decode(file_get_contents('php://input'));
-$ort="Grums";
+if (isset($data->ort)) {
+  $ort = $data->ort;
+} else {
+  $ort = "Grums";
+}
 
 $output=Array();
 

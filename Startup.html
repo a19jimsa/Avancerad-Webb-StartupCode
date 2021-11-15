@@ -34,6 +34,23 @@
       const ort = urlParams.get('ort');
 
       if (ort != null) alert(ort);
+      
+        const params = {
+          ort: ort
+        }
+
+        async function getData(params) {
+          const response = await fetch("API/Ort.php", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
+          })
+            .then((response) => response.json()).then(data => {
+              ReactDOM.render(<Info data={data}/>, document.getElementById("content"));
+            });
+        }
+
+        getData(params);
     </script>
 </body>
 </html>
