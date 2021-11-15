@@ -10,20 +10,9 @@ class Button extends React.Component{
 class Info extends React.Component {
     constructor(props) {
         super(props);
+        console.log(this.props.data);
         this.handleClick = this.handleClick.bind(this);
-        this.state = {data:[{name: "Arjeplog"}], class: "none", show: true, button: "Fråga oss"};
-    }
-    
-
-    async updateInfo(){
-        const response = await fetch("API/Ort.php", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        })
-        .then((response) => response.json()).then(data => {
-        console.log(data);
-        this.setState({data:data});
-        });
+        this.state = {data: this.props.data, class: "none", show: true, button: "Fråga oss"};
     }
 
     handleClick(){
@@ -33,13 +22,14 @@ class Info extends React.Component {
         }else{
             this.setState({class: "dialog", button: "Stäng"});
         }
-        this.updateInfo();
     }
 
-    render() { 
+    render() {
         return <div>
             <h1>{this.state.data.name}</h1>
-            <Forecast />
+            <div>{this.state.data.about}</div>
+            <div>{this.state.data.climate}</div>
+            <Forecast name={this.state.data.name}/>
             <ChatDialog class={this.state.class} name={this.state.data.name}><h1>Väderchatt - {this.state.data.name}</h1></ChatDialog>
             <button onClick={this.handleClick} className="chatButton">{this.state.button}</button>
             <WelcomeDialog />
@@ -51,51 +41,77 @@ class Info extends React.Component {
 class Forecast extends React.Component{
     constructor(props) {
         super(props);
-        console.log(props);
         this.handleClick = this.handleClick.bind(this);
     }
 
     state = {
-        data: [
+        forecast: [
             {name: "Arjeplog", fromtime: "2020-01-01 00:00:00", totime: "2020-01-01 06:00:00", periodno: "0", periodname: "night", auxdata: {"TUNIT":"celsius","TVALUE":"6.4","ALTUNIT":"fahrenheit","ALTVALUE":"43.52","NUMBER":"4","WSYMB3NUMBER":"6","NAME":"Cloudy","RUNIT":"mm","RVALUE":"0","DEG":"22","CODE":"NNE","NAME":"North-northeast","MPS":"0.4","NAME":"Calm","UNIT":"hPa","VALUE":"837"}},
             {name: "Arjeplog",fromtime:"2020-01-02 00:00:00",totime:"2020-01-02 06:00:00",periodno:"0",periodname:"Night",auxdata:{"TUNIT":"celsius","TVALUE":"-8.2","ALTUNIT":"fahrenheit","ALTVALUE":"17.24","NUMBER":"10","WSYMB3NUMBER":"23","FNAME":"Sleet","RUNIT":"mm","RVALUE":"1.2","DEG":"257","CODE":"SW","NAME":"Southwest","MPS":"14.4","NAME":"Near Gale","UNIT":"hPa","VALUE":"1276"}},
             {name:"Arjeplog",fromtime:"2020-01-03 00:00:00",totime:"2020-01-03 06:00:00",periodno:"0",periodname:"Night",auxdata:{"TUNIT":"celsius","TVALUE":"-8.7","ALTUNIT":"fahrenheit","ALTVALUE":"16.34","NUMBER":"11","WSYMB3NUMBER":"25","FNAME":"Light snow","RUNIT":"mm","RVALUE":"1.7","DEG":"257","CODE":"W","NAME":"West","MPS":"15.3","NAME":"Near Gale","UNIT":"hPa","VALUE":"1267"}}
         ],
-        count: 0
+        count: 1,
+        draw: false
     };
 
-    async handleClick(number){
+    async updateForecast(){
+        const params = {
+            ort: this.props.name
+        }
         const response = await fetch("API/Forecast.php", {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
         })
-            .then((response) => response.json()).then(data => {
-            console.log(data);
-            this.setState({data:data});
-            });
-            this.setState({count: number});
+        .then((response) => response.json()).then(data => {
+        this.setState({forecast:data, draw: true});
+        console.log("Detta är data:", data);
+        });
     }
 
-    render(){
-        return (
+    async handleClick(number){
+        this.updateForecast();
+        this.setState({count: number});
+    }
+
+    aside(){
+        return(
+        <aside>
+            <button onClick={this.handleClick.bind(this, 1)}>1 dagsprognos</button>
+            <button onClick={this.handleClick.bind(this, 2)}>2 dagarsprognos</button>
+            <button onClick={this.handleClick.bind(this, 3)}>3 dagarsprognos</button>
+            <button onClick={this.handleClick.bind(this, 7)}>4 dagarsprognos</button>
+            <button onClick={this.handleClick.bind(this, 10)}>10 dagarsprognos</button>
+        </aside>)
+    }
+
+    draw(){
+        if(this.state.draw){
+            return(
             <div className="flex">
-                <aside>
-                    <button onClick={this.handleClick.bind(this, 1)}>1 dagsprognos</button>
-                    <button onClick={this.handleClick.bind(this, 2)}>2 dagarsprognos</button>
-                    <button onClick={this.handleClick.bind(this, 3)}>3 dagarsprognos</button>
-                    <button onClick={this.handleClick.bind(this, 7)}>4 dagarsprognos</button>
-                    <button onClick={this.handleClick.bind(this, 10)}>10 dagarsprognos</button>
-                </aside>
+                {this.aside()}
                 <div className="forecast">
                     <div><Button value="collapse">Öppna alla</Button><p>Temperatur max/min</p><p>Nederbörd per dygn</p><p>Vind/byvind</p></div>
-                    {this.state.data.slice(0, this.state.count).map(tag =>
+                    {this.state.forecast.slice(0, this.state.count).map(tag =>
                     <Accordion>
                         <div key={tag.name+tag.fromtime+tag.totime} className="infoBox"><h2>{tag.name}</h2><h2>{tag.fromtime.substring(0,10)}</h2><h2>{tag.forecast.TVALUE}&#176;C</h2><h2>{tag.forecast.RVALUE}{tag.forecast.RUNIT}</h2><h2>{tag.forecast.MPS}m/s</h2>
                         </div>
                     </Accordion>
                     )}
                 </div>
-            </div>
+            </div>)
+        }else{
+            return (
+                <div className="flex">
+                {this.aside()}
+                </div>
+            )
+        }
+    }
+
+    render(){
+        return (
+            this.draw()
         );
     }
 }
@@ -108,7 +124,6 @@ class Accordion extends React.Component {
 
     handleClick(){
         this.setState();
-
     }
 
     render() { 
@@ -208,4 +223,19 @@ class Like extends React.Component {
     }
 }
 
-ReactDOM.render(<Info />, document.getElementById("content"));
+const params = {
+    ort: "Arjeplog"
+}
+
+async function getData(){
+    const response = await fetch("API/Ort.php", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params)
+    })
+    .then((response) => response.json()).then(data => {
+    ReactDOM.render(<Info data={data}/>, document.getElementById("content"));
+    });
+}
+
+getData();
