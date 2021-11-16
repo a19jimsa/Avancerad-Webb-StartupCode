@@ -27,8 +27,8 @@ class Info extends React.Component {
     render() {
         return <div>
             <h1>{this.state.data.name}</h1>
-            <div>{this.state.data.about}</div>
-            <div>{this.state.data.climate}</div>
+            <div className="about">{this.state.data.about}</div>
+            <div className="about">{this.state.data.climate}</div>
             <Forecast name={this.state.data.name} days={this.props.date}/>
             <ChatDialog class={this.state.class} name={this.state.data.name}><h1>Väderchatt - {this.state.data.name}</h1></ChatDialog>
             <button onClick={this.handleClick} className="chatButton">{this.state.button}</button>
@@ -43,19 +43,16 @@ class Forecast extends React.Component{
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.updateForecast();
+        this.updateForecast(1);
         console.log(this.props.days);
     }
 
     state = {
-        forecast: [
-            {name: "Arjeplog", fromtime: "2020-01-01 00:00:00", totime: "2020-01-01 06:00:00", periodno: "0", periodname: "night", auxdata: {"TUNIT":"celsius","TVALUE":"6.4","ALTUNIT":"fahrenheit","ALTVALUE":"43.52","NUMBER":"4","WSYMB3NUMBER":"6","NAME":"Cloudy","RUNIT":"mm","RVALUE":"0","DEG":"22","CODE":"NNE","NAME":"North-northeast","MPS":"0.4","NAME":"Calm","UNIT":"hPa","VALUE":"837"}},
-            {name: "Arjeplog",fromtime:"2020-01-02 00:00:00",totime:"2020-01-02 06:00:00",periodno:"0",periodname:"Night",auxdata:{"TUNIT":"celsius","TVALUE":"-8.2","ALTUNIT":"fahrenheit","ALTVALUE":"17.24","NUMBER":"10","WSYMB3NUMBER":"23","FNAME":"Sleet","RUNIT":"mm","RVALUE":"1.2","DEG":"257","CODE":"SW","NAME":"Southwest","MPS":"14.4","NAME":"Near Gale","UNIT":"hPa","VALUE":"1276"}},
-            {name:"Arjeplog",fromtime:"2020-01-03 00:00:00",totime:"2020-01-03 06:00:00",periodno:"0",periodname:"Night",auxdata:{"TUNIT":"celsius","TVALUE":"-8.7","ALTUNIT":"fahrenheit","ALTVALUE":"16.34","NUMBER":"11","WSYMB3NUMBER":"25","FNAME":"Light snow","RUNIT":"mm","RVALUE":"1.7","DEG":"257","CODE":"W","NAME":"West","MPS":"15.3","NAME":"Near Gale","UNIT":"hPa","VALUE":"1267"}}
-        ],
+        forecast: {name:"data är tomt"},
         draw: false
     };
 
+    //If number is null then it is set to 1 in API.
     async updateForecast(number){
         const params = {
             ort: this.props.name,
@@ -72,8 +69,8 @@ class Forecast extends React.Component{
         });
     }
 
-    async handleClick(number){
-        this.updateForecast(number);
+    handleClick(number){
+        this.updateForecast(number);    
     }
 
     aside(){

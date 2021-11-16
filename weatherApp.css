@@ -45,6 +45,7 @@ body {
   display: flex;
   direction: row;
   border: 1px solid black;
+  border-radius: 5px;
   height: auto;
   padding: 10px;
   flex-wrap: wrap;
@@ -228,4 +229,13 @@ button:hover{
   display: flex;
   justify-content: space-around;
   justify-items: center;
+}
+
+.about{
+  width: 100%;
+  height: auto;
+  background-color: white;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
 }
